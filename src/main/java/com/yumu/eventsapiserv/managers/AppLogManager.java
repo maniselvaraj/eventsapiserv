@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.yumu.eventsapiserv.pojos.system.AppLog;
 import com.yumu.eventsapiserv.pojos.system.AppLog.Type;
 import com.yumu.eventsapiserv.repos.AppLogRepository;
+import com.yumu.eventsapiserv.utils.UserAuthenticationUtils;
 
 
 @Component
