@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthCheck {
 	
 	@GetMapping("/health")
-	String checkHealth() {
-		return "All OK at " + System.currentTimeMillis();
+	String  checkHealth() {
+		return "healthy!";
 	}
 	
 }
