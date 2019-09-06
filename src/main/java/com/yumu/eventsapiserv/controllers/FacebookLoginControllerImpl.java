@@ -146,7 +146,7 @@ public class FacebookLoginControllerImpl {
 			yuser = userRepo.save(user);
 		}
 		catch(DuplicateKeyException e){
-			//System.out.println(			e.getMostSpecificCause());
+			// System.out.println(			e.getMostSpecificCause());
 			//e.printStackTrace();
 			return new ResponseEntity<>(ErrorMessages.USER_EXISTS_JSON, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
