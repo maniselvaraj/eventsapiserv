@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yumu.eventsapiserv.exceptions.ApiAccessException;
 import com.yumu.eventsapiserv.managers.*;
 import com.yumu.eventsapiserv.pojos.activities.*;
-import com.yumu.eventsapiserv.pojos.common.PageImplWithMeta;
+import com.yumu.eventsapiserv.pojos.activities.UserRelation.UserType;
 import com.yumu.eventsapiserv.pojos.user.Invitation;
 import com.yumu.eventsapiserv.repositories.*;
 import com.yumu.eventsapiserv.utils.*;
