@@ -3,6 +3,8 @@
  */
 package com.yumu.eventsapiserv.utils;
 
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.yumu.eventsapiserv.exceptions.ApiAccessException;
 import com.yumu.eventsapiserv.exceptions.ErrorMessages;
+import com.yumu.eventsapiserv.pojos.user.YumuUser;
 import com.yumu.eventsapiserv.repositories.UserRepository;
 
 @Component
@@ -39,14 +42,13 @@ public class UserAuthenticationUtils {
 			throw new ApiAccessException(ErrorMessages.USER_SHOULD_BE_LOGGED_IN, 
 					HttpStatus.UNAUTHORIZED);
 		}
-		//TODO: should do it here after caching is enabled + use usermanager
 		
-//		UserDetails principal = (UserDetails) auth.getPrincipal();
-//		YumuUser user = userRepo.findOne(principal.getUsername());
-//		if(user==null){
-//			throw new ApiAccessException(ErrorMessages.UNKNOWN_USER, 
-//					HttpStatus.UNAUTHORIZED);
-//		}
+		UserDetails principal = (UserDetails) auth.getPrincipal();
+		Optional<YumuUser> user = userRepo.findById(principal.getUsername());
+		if(user.isEmpty()){
+			throw new ApiAccessException(ErrorMessages.UNKNOWN_USER, 
+					HttpStatus.UNAUTHORIZED);
+		}
 		return auth;
 	}
 	
