@@ -5,6 +5,7 @@ package com.yumu.eventsapiserv.filters;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,9 @@ public class YumuUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		if (StringUtils.isEmpty(username)) {
+			return null;
+		}
 		Optional<YumuUser> facebookUser = userRepo.findById(username);// findByFacebookUserId(username);
 		if(facebookUser.isEmpty()){
 			return null;

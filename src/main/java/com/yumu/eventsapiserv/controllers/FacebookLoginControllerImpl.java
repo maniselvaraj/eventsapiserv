@@ -16,6 +16,8 @@ import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,12 +28,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mongodb.DuplicateKeyException;
+import com.yumu.eventsapiserv.exceptions.ApiAccessException;
 import com.yumu.eventsapiserv.exceptions.ErrorMessages;
 import com.yumu.eventsapiserv.managers.AppLogManager;
+import com.yumu.eventsapiserv.managers.UserManager;
 import com.yumu.eventsapiserv.pojos.common.Image;
 import com.yumu.eventsapiserv.pojos.user.NameInfo;
+import com.yumu.eventsapiserv.pojos.user.SocialFriends;
+import com.yumu.eventsapiserv.pojos.user.SocialFriendship;
+import com.yumu.eventsapiserv.pojos.user.SocialFriendship.SignInProvider;
 import com.yumu.eventsapiserv.pojos.user.YumuUser;
+import com.yumu.eventsapiserv.repositories.SocialFriendshipRepository;
 import com.yumu.eventsapiserv.repositories.UserRepository;
+import com.yumu.eventsapiserv.utils.HttpResponseUtil;
+import com.yumu.eventsapiserv.utils.UserAuthenticationUtils;
 import com.yumu.eventsapiserv.utils.UserUtil;
 
 
@@ -46,11 +56,11 @@ public class FacebookLoginControllerImpl {
 	@Autowired
 	private UserRepository userRepo;
 	
-//	@Autowired
-//	private UserManager userManager;
+	@Autowired
+	private UserManager userManager;
 	
-//	@Autowired
-//	private SocialFriendshipRepository socialFriendRepo;
+	@Autowired
+	private SocialFriendshipRepository socialFriendRepo;
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> exceptionHandler(Exception e) {
@@ -154,38 +164,38 @@ public class FacebookLoginControllerImpl {
 		return new ResponseEntity<>(yuser, HttpStatus.OK);
 	}
 
-//	
-//	@RequestMapping(path="/friends", method=RequestMethod.POST)
-//	public ResponseEntity<?> uploadFacebookFriends( @Valid @RequestBody SocialFriends friends ){
-//		
-//		try {
-//			Authentication auth = UserAuthenticationUtils.getAuthenticatedUser();
-//			UserDetails principal = (UserDetails) auth.getPrincipal();
-//			this.userManager.checkIfExists(principal.getUsername());
-//			
-//			if(!friends.getYumuUserId().equals(principal.getUsername())){
-//				return HttpResponseUtil.getJsonMessage("Mismatched users", HttpStatus.BAD_REQUEST);
-//			}
-//			
-//			friends.getFriends().forEach(friend -> {
-//				SocialFriendship friendship = new SocialFriendship();
-//				friendship.setSignInProvider(SignInProvider.FACEBOOK);
-//				friendship.setYourId(principal.getUsername());
-//				friendship.setTheirSocialId(friend);
-//				friendship.setCreatedAt(new DateTime(DateTimeZone.UTC));
-//				friendship.setStatus(SocialFriendship.Status.OPEN);
-//				
-//				this.socialFriendRepo.save(friendship);
-//			});
-//
-//			return HttpResponseUtil.getJsonMessage("Persisted friends count " + friends.getFriends().size(), 
-//					HttpStatus.OK);
-//		}
-//		catch(ApiAccessException e){
-//			return e.getHttpResponse();
-//		}
-//		
-//	}
-//
+	
+	@RequestMapping(path="/friends", method=RequestMethod.POST)
+	public ResponseEntity<?> uploadFacebookFriends( @Valid @RequestBody SocialFriends friends ){
+		
+		try {
+			Authentication auth = UserAuthenticationUtils.getAuthenticatedUser();
+			UserDetails principal = (UserDetails) auth.getPrincipal();
+			this.userManager.checkIfExists(principal.getUsername());
+			
+			if(!friends.getYumuUserId().equals(principal.getUsername())){
+				return HttpResponseUtil.getJsonMessage("Mismatched users", HttpStatus.BAD_REQUEST);
+			}
+			
+			friends.getFriends().forEach(friend -> {
+				SocialFriendship friendship = new SocialFriendship();
+				friendship.setSignInProvider(SignInProvider.FACEBOOK);
+				friendship.setYourId(principal.getUsername());
+				friendship.setTheirSocialId(friend);
+				friendship.setCreatedAt(new DateTime(DateTimeZone.UTC));
+				friendship.setStatus(SocialFriendship.Status.OPEN);
+				
+				this.socialFriendRepo.save(friendship);
+			});
+
+			return HttpResponseUtil.getJsonMessage("Persisted friends count " + friends.getFriends().size(), 
+					HttpStatus.OK);
+		}
+		catch(ApiAccessException e){
+			return e.getHttpResponse();
+		}
+		
+	}
+
 
 }
