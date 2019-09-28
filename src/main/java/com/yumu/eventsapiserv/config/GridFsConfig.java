@@ -13,6 +13,11 @@ import com.mongodb.MongoClient;
  *
  */
 
+/* 
+ * This is over writing mongo config in application.properties. 
+ * Dont have time to fix this issue and use 2 separate DBs for text and images.
+ */
+
 @Configuration
 public class GridFsConfig extends AbstractMongoConfiguration {
 

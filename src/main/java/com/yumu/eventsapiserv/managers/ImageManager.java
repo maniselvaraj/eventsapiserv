@@ -19,6 +19,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.bson.types.ObjectId;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
@@ -120,14 +121,16 @@ public class ImageManager {
 		query.addCriteria(Criteria.where("_id").is(imageId));
 
 		com.mongodb.client.gridfs.model.GridFSFile image = this.gridClient.findOne(query);
+		
 
-		if(image==null){
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();		}
+		if(image==null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();		
+		}
 
 		return ResponseEntity.ok()
 				.contentLength(image.getLength())
-				.contentType(MediaType.parseMediaType(image.getContentType()))
 				.body(this.gridClient.getResource(image));
+
 
 	}
 
