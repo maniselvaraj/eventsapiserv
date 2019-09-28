@@ -1,10 +1,11 @@
-# Events Management (Social) API User Guide
+# Events Management (Social) API 
 
 
 ## Overview
 
 * This is complete API backend that I wrote some time back as a freelancer for a client who wanted API driven event management application.  
 * All the APIs are working as of Sep 2019 when I ported the code to latest the Spring Boot.
+* This is a Spring Boot based REST API backend.
 * Feel free to use in any manner.
 
 ## Dev Set up
